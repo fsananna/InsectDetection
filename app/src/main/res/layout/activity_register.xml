@@ -12,7 +12,7 @@
         android:id="@+id/backgroundImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/registerback"
+        android:src="@drawable/register2"
         android:scaleType="centerCrop" />
 
     <!-- Login Container -->
@@ -25,6 +25,7 @@
         <!-- Login Text -->
         <TextView
             android:layout_width="wrap_content"
+            android:paddingBottom="100dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:text="@string/register"
@@ -55,6 +56,7 @@
             android:inputType="textPassword"
             android:paddingLeft="8dp"
             android:textSize="25sp" />
+
         <ProgressBar
     android:id="@+id/progressBar"
     android:visibility="gone"
