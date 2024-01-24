@@ -8,17 +8,22 @@
     android:gravity="center"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/user_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="hello world"
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+
         />
-<Button
-    android:id="@+id/logout"
-    android:text="@string/logout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:itemPaddingBottom="10dp"
+        app:menu="@menu/bottom_nav_menu"
+        />
+
+
 
 </LinearLayout>
+
