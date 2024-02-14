@@ -42,7 +42,7 @@ public class Register extends AppCompatActivity {
             finish();
         }
     }
-    @SuppressLint("WrongViewCast")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +94,9 @@ textView.setOnClickListener(new View.OnClickListener() {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(Register.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
+                                    // Print the error message to log
+                                    Log.e("AuthenticationError", "Authentication failed: " + task.getException().getMessage());
+
 
                                 }
                             }

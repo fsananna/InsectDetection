@@ -65,7 +65,6 @@
                 app:srcCompat="@drawable/boy_avatar" />
         </LinearLayout>
 
-
         <TextView
             android:id="@+id/name"
             android:layout_width="321dp"
@@ -95,6 +94,20 @@
 
         <TextView
             android:id="@+id/user_details"
+            android:layout_width="301dp"
+            android:layout_height="58dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="69dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="234dp"
+            android:textColor="@color/black"
+            android:paddingTop="15sp"
+            android:textSize="23sp" />
+
+        <TextView
+            android:id="@+id/textViewId"
             android:layout_width="301dp"
             android:layout_height="58dp"
             android:layout_alignParentStart="true"
