@@ -1,35 +1,33 @@
 package com.example.insectdetection;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
-
-public class Login extends AppCompatActivity implements View.OnClickListener {
+public class Login extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
-    Button buttonLogin;
+    Button buttonLogin ,forgotButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
-
 
 
     @Override
@@ -44,10 +42,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private Button buttonDate;
-    private TextView textView;
-    private TextView registerPage;
-    private DatePickerDialog datePickerDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,21 +51,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         editTextPassword = findViewById(R.id.password);
         buttonLogin = findViewById(R.id.btnLogin);
         progressBar = findViewById(R.id.progressBar);
+        forgotButton = findViewById(R.id.forgotPassword);
 
-        textView = (TextView) findViewById(R.id.textViewId);
-        buttonDate = (Button) findViewById(R.id.idBtnPickDate);
-
-        registerPage =(TextView) findViewById(R.id.registerNow);
-        registerPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent =new Intent(Login.this,Register.class);
-                startActivity(intent);
-            }
-        });
-
-
-        buttonDate.setOnClickListener(this);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +65,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     Toast.makeText(Login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(password)) {  // Corrected this line
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(Login.this, "Enter Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -112,26 +93,42 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         });
             }
         });
-    }
+        forgotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText resetMail = new EditText(v.getContext());
+                AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+                passwordResetDialog.setTitle("Reset Password?");
+                passwordResetDialog.setMessage("Enter Your Email To Receive Reset Link.");
+                passwordResetDialog.setView(resetMail);
 
-    @Override
-    public void onClick(View v) {
-
-        DatePicker datePicker = new DatePicker(this);
-        int currentDay = datePicker.getDayOfMonth();
-        int currentMonth = (datePicker.getMonth())+1;
-        int currentYear = datePicker.getYear();
-
-
-
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
+                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        textView.setText(dayOfMonth+"/"+(month+1)+"/"+year);
+                    public void onClick(DialogInterface dialog, int which) {
+                     String mail = resetMail.getText().toString();
+                     mAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                         @Override
+                         public void onSuccess(Void aVoid) {
+                         Toast.makeText(Login.this,"Reset Link Sent To Your Email.",Toast.LENGTH_SHORT).show();
+                         }
+                     }) .addOnFailureListener(new OnFailureListener() {
+                         @Override
+                         public void onFailure(@NonNull Exception e) {
+                             Toast.makeText(Login.this,"Error ! Reset Link Is Not Sent" + e.getMessage(),Toast.LENGTH_SHORT).show();
+                         }
+                     });
+
                     }
-                },currentYear,currentMonth,currentDay);
-        datePickerDialog.show();
+                });
+                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                passwordResetDialog.create().show();
+            }
+        });
     }
 }
