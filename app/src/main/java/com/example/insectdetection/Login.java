@@ -30,6 +30,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     FirebaseAuth mAuth;
     ProgressBar progressBar;
 
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -44,6 +46,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private Button buttonDate;
     private TextView textView;
+    private TextView registerPage;
     private DatePickerDialog datePickerDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         textView = (TextView) findViewById(R.id.textViewId);
         buttonDate = (Button) findViewById(R.id.idBtnPickDate);
+
+        registerPage =(TextView) findViewById(R.id.registerNow);
+        registerPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(Login.this,Register.class);
+                startActivity(intent);
+            }
+        });
 
 
         buttonDate.setOnClickListener(this);
@@ -105,10 +117,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-   DatePicker datePicker = new DatePicker(this);
-   int currentDay = datePicker.getDayOfMonth();
-   int currentMonth = (datePicker.getMonth())+1;
-   int currentYear = datePicker.getYear();
+        DatePicker datePicker = new DatePicker(this);
+        int currentDay = datePicker.getDayOfMonth();
+        int currentMonth = (datePicker.getMonth())+1;
+        int currentYear = datePicker.getYear();
 
 
 
@@ -117,7 +129,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    textView.setText(dayOfMonth+"/"+(month+1)+"/"+year);
+                        textView.setText(dayOfMonth+"/"+(month+1)+"/"+year);
                     }
                 },currentYear,currentMonth,currentDay);
         datePickerDialog.show();
