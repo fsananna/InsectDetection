@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,6 +43,8 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    private TextView registerPage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +56,15 @@ public class Login extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         forgotButton = findViewById(R.id.forgotPassword);
 
+
+        registerPage =(TextView) findViewById(R.id.registerNow);
+        registerPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(Login.this,Register.class);
+                startActivity(intent);
+            }
+        });
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
