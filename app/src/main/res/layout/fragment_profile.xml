@@ -89,7 +89,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="17dp"
             android:layout_marginEnd="321dp"
-            android:layout_marginBottom="238dp"
+            android:layout_marginBottom="300dp"
             android:src="@drawable/iconsmail" />
 
         <TextView
@@ -101,7 +101,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="69dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="234dp"
+            android:layout_marginBottom="295dp"
             android:textColor="@color/black"
             android:paddingTop="15sp"
             android:textSize="23sp" />
@@ -115,11 +115,36 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="69dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="234dp"
+            android:layout_marginBottom="252dp"
             android:textColor="@color/black"
             android:paddingTop="15sp"
             android:textSize="23sp" />
-
+        <TextView
+            android:id="@+id/dobId"
+            android:layout_width="301dp"
+            android:layout_height="58dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="69dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="220dp"
+            android:textColor="@color/black"
+            android:paddingTop="15sp"
+            android:textSize="23sp" />
+        <TextView
+            android:id="@+id/countryId"
+            android:layout_width="301dp"
+            android:layout_height="45dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="69dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="200dp"
+            android:textColor="@color/black"
+            android:paddingTop="15sp"
+            android:textSize="23sp" />
         <Button
             android:id="@+id/logout"
             android:layout_width="wrap_content"

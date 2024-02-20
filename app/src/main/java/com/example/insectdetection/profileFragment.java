@@ -1,4 +1,3 @@
-// profileFragment.java
 package com.example.insectdetection;
 
 import android.content.Intent;
@@ -8,14 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class profileFragment extends Fragment {
     private FirebaseAuth auth;
     private Button button;
-    private TextView textView;
+    private TextView emailTextView, countryTextView, dobTextView;
     private FirebaseUser user;
 
     @Override
@@ -26,7 +33,9 @@ public class profileFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         button = view.findViewById(R.id.logout);
-        textView = view.findViewById(R.id.user_details);
+        emailTextView = view.findViewById(R.id.user_details);
+        countryTextView = view.findViewById(R.id.countryId);
+        dobTextView = view.findViewById(R.id.dobId);
         user = auth.getCurrentUser();
 
         if (user == null) {
@@ -34,7 +43,8 @@ public class profileFragment extends Fragment {
             startActivity(intent);
             requireActivity().finish();
         } else {
-            textView.setText(user.getEmail());
+            emailTextView.setText(user.getEmail());
+            loadUserData(user.getUid());
         }
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -48,5 +58,29 @@ public class profileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void loadUserData(String userId) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String country = dataSnapshot.child("country").getValue(String.class);
+                    String dob = dataSnapshot.child("dob").getValue(String.class);
+                    if (country != null) {
+                        countryTextView.setText(country);
+                    }
+                    if (dob != null) {
+                        dobTextView.setText(dob);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors here
+            }
+        });
     }
 }

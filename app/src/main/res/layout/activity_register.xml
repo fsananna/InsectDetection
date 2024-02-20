@@ -56,6 +56,27 @@
             android:inputType="textPassword"
             android:paddingLeft="8dp"
             android:textSize="25sp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:boxStrokeWidthFocused="0sp"
+            app:boxStrokeWidth="0sp"
+            android:hint="@string/select_country"
+            android:id="@+id/inputLayout"
+            android:layout_marginStart="25sp"
+            android:layout_marginEnd="25sp"
+            android:layout_centerInParent="true"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            >
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/inputTV"
+                android:inputType="none"
+                app:simpleItems="@array/options_list" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ProgressBar
     android:id="@+id/progressBar"
