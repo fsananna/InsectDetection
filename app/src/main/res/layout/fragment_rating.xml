@@ -6,13 +6,10 @@
     tools:context=".ratingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_height="match_parent"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:text="hello_rating"
-        />
+   <WebView
+       android:layout_width="match_parent"
+       android:layout_height="250sp"
+       android:id="@+id/webView"/>
+
 
 </FrameLayout>
