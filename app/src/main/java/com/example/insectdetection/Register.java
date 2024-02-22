@@ -1,4 +1,5 @@
 package com.example.insectdetection;
+
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
@@ -109,8 +110,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
-                            String userId = currentUser.getUid();
 
+                            // Send email verification
+                            currentUser.sendEmailVerification().addOnCompleteListener(emailVerificationTask -> {
+                                if (emailVerificationTask.isSuccessful()) {
+                                    Toast.makeText(Register.this, "Verification email sent. Please verify your email address.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(Register.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                    Log.e("EmailVerification", "Failed to send verification email: " + emailVerificationTask.getException().getMessage());
+                                }
+                            });
+
+                            String userId = currentUser.getUid();
                             User user = new User(email, password, country, Dob);
 
                             // Add the user object to the "users" node in the Firebase database

@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -13,16 +15,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class HomeFragment extends Fragment {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+
     private LocationManager locationManager;
+    private TextView locationTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +41,8 @@ public class HomeFragment extends Fragment {
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
         ImageButton mapButton = rootView.findViewById(R.id.map_button);
+        locationTextView = rootView.findViewById(R.id.location);
+
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,13 +66,18 @@ public class HomeFragment extends Fragment {
         if (location != null) {
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
-            String uri = "geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude;
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            mapIntent.setPackage("com.google.android.apps.maps");
-            if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                startActivity(mapIntent);
-            } else {
-                Toast.makeText(requireContext(), "Google Maps app not found", Toast.LENGTH_SHORT).show();
+
+            Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+            try {
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                if (!addresses.isEmpty()) {
+                    String address = addresses.get(0).getAddressLine(0);
+                    locationTextView.setText(address);
+                    locationTextView.setVisibility(View.VISIBLE); // Make the TextView visible
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(requireContext(), "Failed to get location address", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(requireContext(), "Location not available", Toast.LENGTH_SHORT).show();

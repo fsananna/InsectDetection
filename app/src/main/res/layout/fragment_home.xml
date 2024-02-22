@@ -7,14 +7,11 @@
     tools:context=".HomeFragment">
 
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:text="@string/hello_home" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
     <ImageButton
         android:id="@+id/map_button"
         android:layout_width="50dp"
@@ -23,6 +20,16 @@
         android:background="?android:attr/selectableItemBackground"
         android:layout_centerInParent="true"
         android:contentDescription="Open Google Maps" />
-
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        />
+</LinearLayout>
 
 </FrameLayout>
