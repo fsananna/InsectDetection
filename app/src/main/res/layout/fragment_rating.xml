@@ -4,12 +4,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ratingFragment">
+    <androidx.cardview.widget.CardView
+        android:layout_width="380dp"
+        android:layout_height="650dp"
+       android:layout_marginLeft="13dp"
+        android:layout_marginTop="40dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:text="@string/how_to_rate_this_app"
+        android:textColor="#072449"
+        />
 
     <!-- TODO: Update blank fragment layout -->
    <WebView
        android:layout_width="match_parent"
        android:layout_height="250sp"
-       android:id="@+id/webView"/>
+       android:id="@+id/webView"
+       android:layout_marginTop="50dp"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:padding="24dp">
+            <TextView
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="300dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/rate_our_app"
+                android:textSize="36sp"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                />
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rating"
+                android:progressBackgroundTint="#D8D7D7"
+                android:progressTint="#DACA42"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="40dp"
+                android:numStars="5"
+                android:stepSize="1.0"
+                />
+            <Button
+                android:layout_width="200dp"
+                android:layout_marginStart="70dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/submit"
+                android:text="@string/submit"
+                android:textSize="20sp"
+                android:layout_marginTop="30dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/thank"
+                android:text=""
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="#29367C"
+                android:textSize="25sp"
+                android:layout_marginStart="40dp"
+                android:visibility="invisible"
+                android:layout_gravity="center_horizontal"
+                />
 
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 </FrameLayout>

@@ -14,4 +14,13 @@
     <string name="hello_home">hello_home</string>
     <string name="select_a_country">Select a Country</string>
     <string name="select_country">Select Country</string>
+    <string name="slogan">One insect at a time.</string>
+    <string name="google_map">Google map</string>
+    <string name="know_your_location">Know your location</string>
+    <string name="how_to_rate_this_app">How to rate this app?</string>
+    <string name="rate_our_app">Rate Our App</string>
+    <string name="submit">Submit</string>
+    <string name="thank_you">Thank You</string>
+    <string name="very_disappointing">Very Disappointing\n</string>
+    <string name="thank_you_for_your_feedback">Thank You For Your Feedback\n</string>
 </resources>

@@ -1,4 +1,5 @@
 package com.example.insectdetection;
+import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,36 +19,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
-    EditText editTextEmail, editTextPassword ,editTextDob ,editTextCountry;
+    EditText editTextEmail, editTextPassword, editTextDob, editTextCountry;
     Button buttonReg;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textView;
-    FirebaseUser currentUser ;
+    FirebaseUser currentUser;
 
     private TextView registerDate;
     private DatePickerDialog datePickerDialog;
 
+    DatabaseReference usersRef;
+
     @Override
     public void onStart() {
         super.onStart();
-      currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
@@ -70,101 +73,95 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         TextInputLayout textInputLayout = findViewById(R.id.inputLayout);
         MaterialAutoCompleteTextView autoCompleteTextView = findViewById(R.id.inputTV);
 
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         // Inside onCreate method after initializing autoCompleteTextView
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedOption = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selectedOption)) {
-                    Toast.makeText(Register.this, selectedOption, Toast.LENGTH_SHORT).show();
-                }
+        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedOption = (String) parent.getItemAtPosition(position);
+            if (!TextUtils.isEmpty(selectedOption)) {
+                checkUsernameAvailability(selectedOption);
             }
         });
 
         registerDate.setOnClickListener(this);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
-                finish();
-            }
+        textView.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
         });
 
-        buttonReg.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                progressBar.setVisibility(View.VISIBLE);
-                String email, password ,country,Dob;
-                email = String.valueOf(editTextEmail.getText());
-                password = String.valueOf(editTextPassword.getText());
-                country = String.valueOf(editTextCountry.getText());
-                Dob = String.valueOf(registerDate.getText());
+        buttonReg.setOnClickListener(view -> {
+            progressBar.setVisibility(View.VISIBLE);
+            String email, password, country, Dob;
+            email = String.valueOf(editTextEmail.getText());
+            password = String.valueOf(editTextPassword.getText());
+            country = String.valueOf(editTextCountry.getText());
+            Dob = String.valueOf(registerDate.getText());
 
-                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(country) || TextUtils.isEmpty(Dob)) {
-                    Toast.makeText(Register.this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    return;
-                }
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(country) || TextUtils.isEmpty(Dob)) {
+                Toast.makeText(Register.this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
 
-                // Create user in Firebase Authentication
-                Toast.makeText(Register.this, ""+email+Dob, Toast.LENGTH_SHORT).show();
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // User created successfully, now get the user's UID
-                                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                                    String userId = currentUser.getUid();
+            // Create user in Firebase Authentication
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                            String userId = currentUser.getUid();
 
-                                    // Create a new user object with the user's details
-                                    User user = new User(email, password, country, Dob);
+                            User user = new User(email, password, country, Dob);
 
-                                    // Add the user object to the "users" node in the Firebase database
-                                    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-                                    usersRef.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            progressBar.setVisibility(View.GONE);
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(Register.this, "Account Created.", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                                startActivity(intent);
-                                                finish();
-                                            } else {
-                                                Toast.makeText(Register.this, "Failed to create account.", Toast.LENGTH_SHORT).show();
-                                                Log.e("FirebaseDatabase", "Failed to add user data: " + task.getException().getMessage());
-                                            }
-                                        }
-                                    });
+                            // Add the user object to the "users" node in the Firebase database
+                            usersRef.child(userId).setValue(user).addOnCompleteListener(task1 -> {
+                                progressBar.setVisibility(View.GONE);
+                                if (task1.isSuccessful()) {
+                                    Toast.makeText(Register.this, "Account Created.", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                 } else {
-                                    progressBar.setVisibility(View.GONE);
                                     Toast.makeText(Register.this, "Failed to create account.", Toast.LENGTH_SHORT).show();
-                                    Log.e("AuthenticationError", "Authentication failed: " + task.getException().getMessage());
+                                    Log.e("FirebaseDatabase", "Failed to add user data: " + task1.getException().getMessage());
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(Register.this, "Failed to create account.", Toast.LENGTH_SHORT).show();
+                            Log.e("AuthenticationError", "Authentication failed: " + task.getException().getMessage());
+                        }
+                    });
+        });
+    }
+
+    private void checkUsernameAvailability(String username) {
+        usersRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    editTextCountry.setError("Username already exists");
+                } else {
+                    editTextCountry.setError(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseDatabase", "Error checking username availability: " + error.getMessage());
             }
         });
-
     }
 
     @Override
     public void onClick(View v) {
         DatePicker datePicker = new DatePicker(this);
         int currentDay = datePicker.getDayOfMonth();
-        int currentMonth = (datePicker.getMonth())+1;
+        int currentMonth = (datePicker.getMonth()) + 1;
         int currentYear = datePicker.getYear();
 
         datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        registerDate.setText(dayOfMonth+"/"+(month+1)+"/"+year);
-                    }
-                }, currentYear, currentMonth, currentDay);
+                (view, year, month, dayOfMonth) -> registerDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year), currentYear, currentMonth, currentDay);
         datePickerDialog.show();
     }
 }

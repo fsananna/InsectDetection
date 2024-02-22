@@ -14,18 +14,37 @@
         android:layout_height="match_parent"
         android:src="@drawable/background2"
         android:scaleType="centerCrop" />
-    <!-- Login Text -->
-    <TextView
+    <!-- Login Text and Logo Container -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="140dp"
-        android:layout_marginBottom="20dp"
-        android:paddingTop="40dp"
-        android:text="@string/login"
-        android:textColor="@android:color/white"
-        android:textSize="40dp"
-        android:textStyle="bold" />
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
 
+        <!-- Login Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:textColor="@android:color/white"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="40dp"/>
+
+        <!-- Space between login text and logo -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Your logo, adjust width and height as needed -->
+        <ImageView
+            android:id="@+id/loginLogo"
+            android:layout_width="70dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/bug_foreground" />
+    </LinearLayout>
     <!-- Login Container -->
     <LinearLayout
         android:layout_width="match_parent"
