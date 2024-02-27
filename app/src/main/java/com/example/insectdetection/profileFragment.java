@@ -19,21 +19,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.example.insectdetection.Map_Fragment;
 
 public class profileFragment extends Fragment {
     private FirebaseAuth auth;
     private Button button;
     private TextView emailTextView, countryTextView, dobTextView;
     private FirebaseUser user;
+     FirebaseDatabase db = FirebaseDatabase.getInstance("https://insectdetection-c56d4-default-rtdb.asia-southeast1.firebasedatabase.app") ;
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Fragment fragment = new Map_Fragment();
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
-    }
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//        Fragment fragment = new Map_Fragment();
+//        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
+//    }
 
 
     @Override
@@ -79,7 +79,7 @@ public class profileFragment extends Fragment {
     }
 
     private void loadUserData(String userId) {
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        DatabaseReference userRef=db.getReference().child("users").child(userId);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

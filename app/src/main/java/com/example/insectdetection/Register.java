@@ -1,7 +1,5 @@
 package com.example.insectdetection;
 
-import com.google.android.material.textfield.TextInputLayout;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -19,33 +16,29 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
-    EditText editTextEmail, editTextPassword, editTextDob, editTextCountry;
+    EditText editTextEmail, editTextPassword, editTextCountry;
     Button buttonReg;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textView;
     FirebaseUser currentUser;
+    FirebaseDatabase db;
 
     private TextView registerDate;
     private DatePickerDialog datePickerDialog;
-
-    DatabaseReference usersRef;
 
     @Override
     public void onStart() {
@@ -63,6 +56,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance("https://insectdetection-c56d4-default-rtdb.asia-southeast1.firebasedatabase.app/");
+
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         editTextCountry = findViewById(R.id.inputTV);
@@ -71,25 +66,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         textView = findViewById(R.id.loginNow);
         registerDate = findViewById(R.id.idBtnPickDate);
 
-        TextInputLayout textInputLayout = findViewById(R.id.inputLayout);
-        MaterialAutoCompleteTextView autoCompleteTextView = findViewById(R.id.inputTV);
-
-        usersRef = FirebaseDatabase.getInstance().getReference("users");
-
-        // Inside onCreate method after initializing autoCompleteTextView
-        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedOption = (String) parent.getItemAtPosition(position);
-            if (!TextUtils.isEmpty(selectedOption)) {
-                checkUsernameAvailability(selectedOption);
-            }
-        });
-
-        registerDate.setOnClickListener(this);
         textView.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
         });
+
+        registerDate.setOnClickListener(this);
 
         buttonReg.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
@@ -105,13 +88,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 return;
             }
 
-            // Create user in Firebase Authentication
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
 
-                            // Send email verification
                             currentUser.sendEmailVerification().addOnCompleteListener(emailVerificationTask -> {
                                 if (emailVerificationTask.isSuccessful()) {
                                     Toast.makeText(Register.this, "Verification email sent. Please verify your email address.", Toast.LENGTH_LONG).show();
@@ -121,46 +102,32 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                 }
                             });
 
-                            String userId = currentUser.getUid();
-                            User user = new User(email, password, country, Dob);
+                            // Save user data to Realtime Database
+                            User user = new User(email, country, Dob);
 
-                            // Add the user object to the "users" node in the Firebase database
-                            usersRef.child(userId).setValue(user).addOnCompleteListener(task1 -> {
-                                progressBar.setVisibility(View.GONE);
-                                if (task1.isSuccessful()) {
-                                    Toast.makeText(Register.this, "Account Created.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(Register.this, "Failed to create account.", Toast.LENGTH_SHORT).show();
-                                    Log.e("FirebaseDatabase", "Failed to add user data: " + task1.getException().getMessage());
-                                }
-                            });
+                            DatabaseReference usersRef = FirebaseDatabase.getInstance("https://insectdetection-c56d4-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
+
+                            usersRef.child(currentUser.getUid()).setValue(user)
+                                    .addOnSuccessListener(aVoid -> {
+                                        progressBar.setVisibility(View.GONE);
+                                        Toast.makeText(Register.this, "Account Created.", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        progressBar.setVisibility(View.GONE);
+                                        Toast.makeText(Register.this, "Failed to create account.", Toast.LENGTH_SHORT).show();
+                                        Log.e("RealtimeDatabase", "Failed to add user data: " + e.getMessage());
+                                    });
                         } else {
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(Register.this, "Failed to create account.", Toast.LENGTH_SHORT).show();
                             Log.e("AuthenticationError", "Authentication failed: " + task.getException().getMessage());
                         }
                     });
-        });
-    }
 
-    private void checkUsernameAvailability(String username) {
-        usersRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    editTextCountry.setError("Username already exists");
-                } else {
-                    editTextCountry.setError(null);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseDatabase", "Error checking username availability: " + error.getMessage());
-            }
         });
     }
 

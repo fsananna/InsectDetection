@@ -23,4 +23,6 @@
     <string name="thank_you">Thank You</string>
     <string name="very_disappointing">Very Disappointing\n</string>
     <string name="thank_you_for_your_feedback">Thank You For Your Feedback\n</string>
+    <string name="_0">0</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

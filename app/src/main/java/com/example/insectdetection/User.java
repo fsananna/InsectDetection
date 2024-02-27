@@ -11,12 +11,13 @@ public class User {
     }
 
     // Parameterized constructor
-    public User(String email, String password, String country, String dob) {
+    public User(String email, String country, String dob) {
         this.email = email;
-        this.password = password;
         this.country = country;
         this.Dob = dob;
     }
+
+
 
     // Getters and setters
     public String getEmail() {
