@@ -93,6 +93,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         if (task.isSuccessful()) {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
 
+
                             currentUser.sendEmailVerification().addOnCompleteListener(emailVerificationTask -> {
                                 if (emailVerificationTask.isSuccessful()) {
                                     Toast.makeText(Register.this, "Verification email sent. Please verify your email address.", Toast.LENGTH_LONG).show();

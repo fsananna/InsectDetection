@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (itemId == R.id.navRatings) {
 
-                    loadFragment(new ratingFragment(),false);
+                    loadFragment(new RatingFragment(),false);
 
                 }
 

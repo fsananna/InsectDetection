@@ -42,6 +42,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:19.3.0")
     implementation("com.google.firebase:firebase-database:20.3.0")
     implementation("com.google.firebase:firebase-firestore:24.10.2")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     implementation ("com.airbnb.android:lottie:6.3.0")
@@ -49,6 +51,8 @@ dependencies {
     implementation ("com.google.android.gms:play-services-maps:18.2.0")
     implementation ("com.google.android.gms:play-services-location:21.1.0")
     implementation ("com.karumi:dexter:6.2.1")
-
+    implementation ("com.github.bumptech.glide:glide:4.14.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.14.1")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 
 }
