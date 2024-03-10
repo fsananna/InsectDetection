@@ -71,11 +71,10 @@
             android:id="@+id/like_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/like"
+            android:layout_marginStart="35dp"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/like"
-            android:layout_marginStart="35dp"
-            />
+            android:src="@drawable/baseline_thumb_up_24" />
 
         <TextView
             android:id="@+id/like_count"
@@ -91,7 +90,7 @@
             android:id="@+id/dislike_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/like2"
+            android:src="@drawable/baseline_thumb_down_24"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/dislike" />
 
@@ -110,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4dp"
-            android:text="@string/time_stamp"
+            android:text="@string/timestamp"
             android:gravity="end"
             />
 

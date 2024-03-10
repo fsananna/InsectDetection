@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="logout" type="id" />
+    <item name="countryId" type="id" />
+    <item name="dobId" type="id" />
+    <item name="user_details" type="id" />
+    <item name="imageView2" type="id" />
+    <item name="profileimg" type="id" />
+    <item name="imageView" type="id" />
+    <item name="relativeLayout" type="id" />
+    <item name="frame_layout" type="id" />
+</resources>

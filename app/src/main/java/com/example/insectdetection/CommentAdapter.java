@@ -120,10 +120,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int dislikeCountVal = dislikedByList != null ? dislikedByList.size() : 0;
 
             if (likedByList != null && likedByList.contains(currentUserId)) {
-                likeButton.setImageResource(R.drawable.like);
+                likeButton.setImageResource(R.drawable.thum_up_after_liked);
             }
             if (dislikedByList != null && dislikedByList.contains(currentUserId)) {
-                dislikeButton.setImageResource(R.drawable.like2);
+                dislikeButton.setImageResource(R.drawable.baseline_thumb_down_after_dislike_24);
             }
             if (likeCountVal > 0) {
                 likeCount.setText(String.valueOf(likeCountVal));

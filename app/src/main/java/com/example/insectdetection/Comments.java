@@ -41,10 +41,18 @@ public class Comments {
     }
 
     public ArrayList<String> getLikedBy() {
+        if (likedBy == null) {
+            likedBy = new ArrayList<>();
+        }
         return likedBy;
     }
 
+
     public ArrayList<String> getDislikedBy() {
+
+        if (dislikedBy == null) {
+            dislikedBy = new ArrayList<>();
+        }
         return dislikedBy;
     }
 

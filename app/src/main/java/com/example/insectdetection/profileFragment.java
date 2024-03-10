@@ -23,17 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 public class profileFragment extends Fragment {
     private FirebaseAuth auth;
     private Button button;
-    private TextView emailTextView, countryTextView, dobTextView;
+    private TextView emailTextView, userTextView, countryTextView, dobTextView ;
     private FirebaseUser user;
-     FirebaseDatabase db = FirebaseDatabase.getInstance("https://insectdetection-c56d4-default-rtdb.asia-southeast1.firebasedatabase.app") ;
+    FirebaseDatabase db = FirebaseDatabase.getInstance("https://insectdetection-c56d4-default-rtdb.asia-southeast1.firebasedatabase.app/") ;
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//
-//        Fragment fragment = new Map_Fragment();
-//        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commit();
-//    }
+
 
 
     @Override
@@ -48,6 +42,7 @@ public class profileFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         button = view.findViewById(R.id.logout);
+        userTextView =view.findViewById(R.id.userName);
         emailTextView = view.findViewById(R.id.user_details);
         countryTextView = view.findViewById(R.id.countryId);
         dobTextView = view.findViewById(R.id.dobId);
@@ -84,8 +79,14 @@ public class profileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    String userName = dataSnapshot.child("userName").getValue(String.class);
                     String country = dataSnapshot.child("country").getValue(String.class);
                     String dob = dataSnapshot.child("dob").getValue(String.class);
+
+                    // Set user name to userTextView instead of countryTextView
+                    if (userName != null) {
+                        userTextView.setText(userName);
+                    }
                     if (country != null) {
                         countryTextView.setText(country);
                     }

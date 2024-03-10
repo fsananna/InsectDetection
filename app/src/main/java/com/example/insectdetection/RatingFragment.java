@@ -189,9 +189,7 @@ public class RatingFragment extends Fragment implements CommentAdapter.OnClickLi
 
     @Override
     public void onLikeClick(int position, TextView likeCountTextView, ImageButton likeButton) {
-        if (position < 0 || position >= mCommentList.size()) {
-            return;
-        }
+
 
         Comments comment = mCommentList.get(position);
         if (comment == null) {
@@ -204,16 +202,16 @@ public class RatingFragment extends Fragment implements CommentAdapter.OnClickLi
         }
 
         ArrayList<String> likedBy = comment.getLikedBy();
-        if (likedBy == null) {
-            return;
-        }
+        ArrayList<String> dislikeBy=comment.getDislikedBy();
 
-        if (likedBy.contains(userId)) {
-            likedBy.remove(userId);
-            likeButton.setImageResource(R.drawable.like);
-        } else {
-            likedBy.add(userId);
-            likeButton.setImageResource(R.drawable.like2);
+        if(!dislikeBy.contains(userId)) {
+            if (likedBy.contains(userId)) {
+                likedBy.remove(userId);
+                likeButton.setImageResource(R.drawable.baseline_thumb_up_24);
+            } else {
+                likedBy.add(userId);
+                likeButton.setImageResource(R.drawable.thum_up_after_liked);
+            }
         }
 
         int likeCount = likedBy.size();
@@ -226,9 +224,7 @@ public class RatingFragment extends Fragment implements CommentAdapter.OnClickLi
 
     @Override
     public void onDisLikeClick(int position, TextView disLikeCountTextView, ImageButton dislikeButton) {
-        if (position < 0 || position >= mCommentList.size()) {
-            return;
-        }
+
 
         Comments comment = mCommentList.get(position);
         if (comment == null) {
@@ -240,25 +236,26 @@ public class RatingFragment extends Fragment implements CommentAdapter.OnClickLi
             return;
         }
 
+        ArrayList<String> likedBy = comment.getLikedBy();
         ArrayList<String> dislikedBy = comment.getDislikedBy();
-        if (dislikedBy == null) {
-            return;
+
+
+        if (!likedBy.contains(userId)) {
+            if (dislikedBy.contains(userId)) {
+                dislikedBy.remove(userId);
+                dislikeButton.setImageResource(R.drawable.baseline_thumb_down_24);
+            } else {
+                dislikedBy.add(userId);
+                dislikeButton.setImageResource(R.drawable.baseline_thumb_down_after_dislike_24);
+            }
+
+            int dislikeCount = dislikedBy.size();
+            disLikeCountTextView.setText(String.valueOf(dislikeCount));
+            disLikeCountTextView.setVisibility(dislikeCount > 0 ? View.VISIBLE : View.INVISIBLE);
+
+            updateCommentListInDatabase(mCommentList);
+            commentAdapter.notifyDataSetChanged();
         }
-
-        if (dislikedBy.contains(userId)) {
-            dislikedBy.remove(userId);
-            dislikeButton.setImageResource(R.drawable.like);
-        } else {
-            dislikedBy.add(userId);
-            dislikeButton.setImageResource(R.drawable.like2);
-        }
-
-        int dislikeCount = dislikedBy.size();
-        disLikeCountTextView.setText(String.valueOf(dislikeCount));
-        disLikeCountTextView.setVisibility(dislikeCount > 0 ? View.VISIBLE : View.INVISIBLE);
-
-        updateCommentListInDatabase(mCommentList);
-        commentAdapter.notifyDataSetChanged();
     }
 
 

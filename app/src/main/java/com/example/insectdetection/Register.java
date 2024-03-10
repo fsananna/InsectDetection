@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
-    EditText editTextEmail, editTextPassword, editTextCountry;
+    EditText editTextEmail, editTextPassword, editTextCountry ,editTextUserName;
     Button buttonReg;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -60,6 +60,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        editTextUserName = findViewById(R.id.userName);
         editTextCountry = findViewById(R.id.inputTV);
         buttonReg = findViewById(R.id.btnRegister);
         progressBar = findViewById(R.id.progressBar);
@@ -76,13 +77,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         buttonReg.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
-            String email, password, country, Dob;
+            String email, userName, password, country, Dob;
             email = String.valueOf(editTextEmail.getText());
             password = String.valueOf(editTextPassword.getText());
             country = String.valueOf(editTextCountry.getText());
             Dob = String.valueOf(registerDate.getText());
+            userName =String.valueOf(editTextUserName.getText());
 
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(country) || TextUtils.isEmpty(Dob)) {
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(userName) || TextUtils.isEmpty(password) || TextUtils.isEmpty(country) || TextUtils.isEmpty(Dob)) {
                 Toast.makeText(Register.this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
                 return;
@@ -104,7 +106,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                             });
 
                             // Save user data to Realtime Database
-                            User user = new User(email, country, Dob);
+                            //dekh bhai dekh
+                            User user = new User(userName,email ,country, Dob);
+
 
                             DatabaseReference usersRef = FirebaseDatabase.getInstance("https://insectdetection-c56d4-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
 
